@@ -16,19 +16,26 @@ class MainViewModel() : ViewModel() {
     private val repository = MainRepository()
 
     private var valuteInfoLiveData = MutableLiveData<ValuteSearchResponse>()
+    private var errorLiveData = MutableLiveData<Unit>()
 
     val valuteInfo: LiveData<ValuteSearchResponse>
         get() = valuteInfoLiveData
 
+    val errorData: LiveData<Unit>
+        get() = errorLiveData
 
     fun getValuteInfo() {
-        viewModelScope.launch{
-
-            while (isActive) {
-                valuteInfoLiveData.postValue(repository.getValuteInfo())
-                Log.e("Test", valuteInfoLiveData.toString())
-                delay(30000)
+        viewModelScope.launch(Dispatchers.IO){
+            try{
+                while (isActive) {
+                    valuteInfoLiveData.postValue(repository.getValuteInfo())
+                    Log.e("Test", valuteInfoLiveData.toString())
+                    delay(30000)
+                }
+            }catch(e:Throwable){
+                errorLiveData.postValue(Unit)
             }
+
         }
     }
 }

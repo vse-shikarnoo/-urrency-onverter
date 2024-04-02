@@ -23,6 +23,19 @@
         tools:text="17:00:00"
         android:textColor="@color/black"
         android:textSize="24sp" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <Button
+        android:id="@+id/retryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Try again"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainList"
@@ -31,5 +44,7 @@
         android:layout_marginTop="16dp"
         tools:itemCount="5"
         tools:listitem="@layout/item_main_list_layout" />
+
+
 
 </LinearLayout>

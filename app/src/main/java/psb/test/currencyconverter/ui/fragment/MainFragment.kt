@@ -14,6 +14,7 @@ import psb.test.currencyconverter.databinding.FragmentMainLayoutBinding
 import psb.test.currencyconverter.ui.adapter.MainListAdapter
 import psb.test.currencyconverter.vm.MainViewModel
 import vk.test.passwordmanager.utils.autoCleared
+import vk.test.passwordmanager.utils.toast
 
 class MainFragment : Fragment(R.layout.fragment_main_layout) {
 
@@ -27,6 +28,12 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         viewModel.getValuteInfo()
         initAdapter()
         observe()
+
+        binding.retryButton.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.retryButton.visibility = View.GONE
+            viewModel.getValuteInfo()
+        }
     }
 
     private fun initAdapter() {
@@ -45,12 +52,18 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
 
     private fun observe() {
         viewModel.valuteInfo.observe(viewLifecycleOwner) {
+            binding.progressBar.visibility = View.GONE
             val timestamp = it.timestamp
             val date = timestamp.substringBefore("T")
             val time = timestamp.substringAfter("T").substringBefore("+")
             binding.date.text = date
             binding.time.text = time
             listAdapter.submitList(it.valute.values.toList())
+        }
+        viewModel.errorData.observe(viewLifecycleOwner) {
+            toast("Error")
+            binding.progressBar.visibility = View.GONE
+            binding.retryButton.visibility = View.VISIBLE
         }
     }
 

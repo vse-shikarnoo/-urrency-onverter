@@ -1,57 +1,60 @@
 package psb.test.currencyconverter.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import psb.test.currencyconverter.R
 import psb.test.currencyconverter.databinding.FragmentMainLayoutBinding
-import psb.test.currencyconverter.ui.adapter.MainListAdapter
+import psb.test.currencyconverter.model.Currency
 import psb.test.currencyconverter.vm.MainViewModel
-import vk.test.passwordmanager.utils.autoCleared
+
 
 class MainFragment : Fragment(R.layout.fragment_main_layout) {
 
     private val binding: FragmentMainLayoutBinding by viewBinding(FragmentMainLayoutBinding::bind)
     private val viewModel: MainViewModel by viewModels()
-    private var listAdapter: MainListAdapter by autoCleared()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getValuteInfo()
-        initAdapter()
+        listeners()
         observe()
+
+        viewModel.getCurrencies()
     }
 
-    private fun initAdapter() {
-        listAdapter = MainListAdapter {}
-        with(binding.mainList) {
-            adapter = listAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
-                )
-            )
+    private fun setSpinners(currencyList: List<Currency>) {
+        val currencyCodeList = currencyList.map {
+            it.code
+        }
+
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, currencyCodeList)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.fromSpinner.adapter = adapter
+        binding.toSpinner.adapter = adapter
+    }
+
+    private fun listeners() {
+        with(binding) {
+
         }
     }
 
     private fun observe() {
-        viewModel.valuteInfo.observe(viewLifecycleOwner) {
-            val timestamp = it.timestamp
-            val date = timestamp.substringBefore("T")
-            val time = timestamp.substringAfter("T").substringBefore("+")
-            binding.date.text = date
-            binding.time.text = time
-            listAdapter.submitList(it.valute.values.toList())
+        viewModel.currencyList.observe(viewLifecycleOwner) {
+            setSpinners(it)
         }
+        viewModel.error.observe(viewLifecycleOwner) {
+            bindError(true)
+        }
+    }
+
+    private fun bindError(flag: Boolean) {
+        TODO("Not yet implemented")
     }
 
 }

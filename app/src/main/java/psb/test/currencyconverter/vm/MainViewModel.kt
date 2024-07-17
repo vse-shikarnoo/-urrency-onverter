@@ -5,29 +5,40 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import psb.test.currencyconverter.model.ValuteSearchResponse
+import psb.test.currencyconverter.model.Currency
 import psb.test.currencyconverter.repository.MainRepository
 
 class MainViewModel() : ViewModel() {
     private val repository = MainRepository()
 
-    private var valuteInfoLiveData = MutableLiveData<ValuteSearchResponse>()
 
-    val valuteInfo: LiveData<ValuteSearchResponse>
-        get() = valuteInfoLiveData
+    private var currencyListLiveData = MutableLiveData<List<Currency>>()
+    private var errorLiveData = MutableLiveData<Unit>()
 
 
-    fun getValuteInfo() {
-        viewModelScope.launch{
+    val currencyList: LiveData<List<Currency>>
+        get() = currencyListLiveData
+    val error: LiveData<Unit>
+        get() = errorLiveData
 
-            while (isActive) {
-                valuteInfoLiveData.postValue(repository.getValuteInfo())
-                Log.e("Test", valuteInfoLiveData.toString())
-                delay(30000)
+
+    fun getCurrencies() {
+        viewModelScope.launch {
+            try {
+                currencyListLiveData.postValue(repository.getCurrencies())
+            }catch (t:Throwable){
+                Log.e("ERROR", "getCurrencies: ", t)
+            }
+        }
+    }
+
+    fun convert(from: String, to: String, amount: Double = 1.0) {
+        viewModelScope.launch {
+            try {
+                Log.d("TAG", "convert: ${repository.convert(from, to, amount)}")
+            }catch (t:Throwable){
+                Log.e("ERROR", "convert: ", t)
             }
         }
     }

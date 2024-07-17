@@ -1,29 +1,30 @@
 package psb.test.currencyconverter.remote
 
 import okhttp3.OkHttpClient
-import psb.test.currencyconverter.model.ValuteSearchResponse
+import psb.test.currencyconverter.model.Currency
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
-interface CBService {
+interface CurrencyService {
 
-    //https://www.cbr-xml-daily.ru/daily_json.js
-    @GET("daily_json.js")
-    suspend fun getValuteInfo():ValuteSearchResponse
+    @GET("b5829c35-a683-4096-8cc2-11b561c8e539")
+    suspend fun getCurrencies(): List<Currency>
 
     companion object{
-        fun create(): CBService{
+        fun create(): CurrencyService{
             val okHttpClient = OkHttpClient.Builder()
                 .build()
 
 
             return Retrofit.Builder()
-                .baseUrl("https://www.cbr-xml-daily.ru/")
+                .baseUrl("https://run.mocky.io/v3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()
-                .create(CBService::class.java)
+                .create(CurrencyService::class.java)
         }
     }
 }

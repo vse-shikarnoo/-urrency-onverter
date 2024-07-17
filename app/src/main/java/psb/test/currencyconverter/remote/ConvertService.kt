@@ -1,6 +1,7 @@
 package psb.test.currencyconverter.remote
 
 import okhttp3.OkHttpClient
+import psb.test.currencyconverter.model.ConvertResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -13,7 +14,7 @@ interface ConvertService {
         @Query("from") from:String,
         @Query("to") to:String,
         @Query("amount") amount:Double,
-    )
+    ):ConvertResponse
 
     companion object{
         fun create(): ConvertService{

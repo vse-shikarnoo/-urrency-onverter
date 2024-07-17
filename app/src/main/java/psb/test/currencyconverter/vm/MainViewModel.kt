@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import psb.test.currencyconverter.model.ConvertResponse
 import psb.test.currencyconverter.model.Currency
 import psb.test.currencyconverter.repository.MainRepository
 
@@ -14,11 +15,14 @@ class MainViewModel() : ViewModel() {
 
 
     private var currencyListLiveData = MutableLiveData<List<Currency>>()
+    private var convertDataLiveData = MutableLiveData<ConvertResponse>()
     private var errorLiveData = MutableLiveData<Unit>()
 
 
     val currencyList: LiveData<List<Currency>>
         get() = currencyListLiveData
+    val convertData: LiveData<ConvertResponse>
+        get() = convertDataLiveData
     val error: LiveData<Unit>
         get() = errorLiveData
 
@@ -33,10 +37,10 @@ class MainViewModel() : ViewModel() {
         }
     }
 
-    fun convert(from: String, to: String, amount: Double = 1.0) {
+    fun convert(from: String, to: String, amount: Double) {
         viewModelScope.launch {
             try {
-                Log.d("TAG", "convert: ${repository.convert(from, to, amount)}")
+                convertDataLiveData.postValue(repository.convert(from, to, amount))
             }catch (t:Throwable){
                 Log.e("ERROR", "convert: ", t)
             }

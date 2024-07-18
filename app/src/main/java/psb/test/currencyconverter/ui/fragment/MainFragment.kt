@@ -98,8 +98,8 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         val leftY = min(binding.fromSpinner.y, binding.toSpinner.y)
         val rightX = max(binding.toSpinner.x, binding.fromSpinner.x)
         val rightY = max(binding.toSpinner.y, binding.fromSpinner.y)
-        val anglesFrom = if (changeFlag) Pair(90f, -180f) else Pair(-90f, 180f)
-        val anglesTo = if (changeFlag) Pair(-90f, 180f) else Pair(90f, -180f)
+        val anglesFrom = if (!changeFlag) Pair(90f, -180f) else Pair(-90f, 180f)
+        val anglesTo = if (!changeFlag) Pair(-90f, 180f) else Pair(90f, -180f)
 
         Log.i("TAG", "animateChangeLeft: $leftX; $leftY; $anglesFrom")
         Log.i("TAG", "animateChangeRight: $rightX; $rightY; $anglesTo")

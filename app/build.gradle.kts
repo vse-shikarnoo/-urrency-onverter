@@ -103,4 +103,8 @@ dependencies {
 
     //View binding delegate
     implementation ("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
+
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.14.2")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
 }

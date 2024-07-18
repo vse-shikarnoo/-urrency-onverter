@@ -3,4 +3,5 @@
     <string name="flag_image_path">https://flagcdn.com/256x192/%s.png</string>
     <string name="error_text">Что то пошло не так</string>
     <string name="retry_btn_text">Попробовать еще раз</string>
+    <string name="ratio">1 %1$s = %2$s %3$s</string>
 </resources>

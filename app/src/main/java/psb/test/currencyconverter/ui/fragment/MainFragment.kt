@@ -17,8 +17,11 @@ import psb.test.currencyconverter.R
 import psb.test.currencyconverter.databinding.FragmentMainLayoutBinding
 import psb.test.currencyconverter.model.ConvertResponse
 import psb.test.currencyconverter.model.Currency
+import psb.test.currencyconverter.ui.adapter.SpinnerAdapter
 import psb.test.currencyconverter.vm.MainViewModel
 import vk.test.passwordmanager.utils.makeOnItemSelectedListener
+import kotlin.math.max
+import kotlin.math.min
 
 
 class MainFragment : Fragment(R.layout.fragment_main_layout) {
@@ -37,17 +40,8 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
     }
 
     private fun setSpinners(currencyList: List<Currency>) {
-        val currencyCodeList = currencyList.map {
-            it.code
-        }
-
-        val adapter: ArrayAdapter<String> =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, currencyCodeList)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.fromSpinner.adapter = adapter
-        binding.toSpinner.adapter = adapter
-
-
+        binding.fromSpinner.adapter = SpinnerAdapter(requireContext(), currencyList)
+        binding.toSpinner.adapter = SpinnerAdapter(requireContext(), currencyList)
     }
 
     private fun listeners() {
@@ -61,12 +55,12 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
             }
 
             fromSpinner.onItemSelectedListener = makeOnItemSelectedListener {
-                fromDestination = it
+                fromDestination = it.code
                 convert()
             }
 
             toSpinner.onItemSelectedListener = makeOnItemSelectedListener {
-                toDestination = it
+                toDestination = it.code
                 convert()
             }
 
@@ -100,12 +94,15 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
 
     private fun animateChange() {
 
-        val leftX = if (changeFlag) binding.fromSpinner.x else binding.toSpinner.x
-        val leftY = if (changeFlag) binding.fromSpinner.y else binding.toSpinner.y
-        val rightX = if (changeFlag) binding.toSpinner.x else binding.fromSpinner.x
-        val rightY = if (changeFlag) binding.toSpinner.y else binding.fromSpinner.y
-        val anglesFrom = if (changeFlag) Pair(180f, -180f) else Pair(0f, -180f)
-        val anglesTo = if (changeFlag) Pair(0f, -180f) else Pair(180f, -180f)
+        val leftX = min(binding.fromSpinner.x, binding.toSpinner.x)
+        val leftY = min(binding.fromSpinner.y, binding.toSpinner.y)
+        val rightX = max(binding.toSpinner.x, binding.fromSpinner.x)
+        val rightY = max(binding.toSpinner.y, binding.fromSpinner.y)
+        val anglesFrom = if (changeFlag) Pair(90f, -180f) else Pair(-90f, 180f)
+        val anglesTo = if (changeFlag) Pair(-90f, 180f) else Pair(90f, -180f)
+
+        Log.i("TAG", "animateChangeLeft: $leftX; $leftY; $anglesFrom")
+        Log.i("TAG", "animateChangeRight: $rightX; $rightY; $anglesTo")
 
         val pathFrom = Path().apply {
             arcTo(
@@ -155,9 +152,9 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         }
         viewModel.convertData.observe(viewLifecycleOwner) {
             Log.d("Test", "observeConvert: $it")
-            binding.toEt.setText(it.result.toString())
             bindError(false)
             binding.loadingLayout.progressBar.visibility = View.GONE
+            setData(it)
         }
     }
 
@@ -177,13 +174,25 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         viewModel.convert(fromDestination, toDestination, amount, changeFlag)
     }
 
+    private fun setData(convertResponse: ConvertResponse) {
+        with(binding) {
+            toEt.setText(convertResponse.result.toString())
+            rateTv.text = getString(
+                R.string.ratio,
+                fromDestination,
+                String.format("%.2f", convertResponse.info.rate),
+                toDestination
+            )
+        }
+    }
+
     companion object {
         private var fromDestination: String = ""
         private var toDestination: String = ""
         private var amount: Double = 0.0
         private var changeFlag: Boolean = false
 
-        private fun changeDestinations(){
+        private fun changeDestinations() {
             val t = fromDestination
             fromDestination = toDestination
             toDestination = t

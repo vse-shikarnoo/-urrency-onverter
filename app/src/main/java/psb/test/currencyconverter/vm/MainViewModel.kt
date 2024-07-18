@@ -37,7 +37,7 @@ class MainViewModel() : ViewModel() {
         }
     }
 
-    fun convert(from: String, to: String, amount: Double) {
+    fun convert(from: String, to: String, amount: Double, changeFlag: Boolean) {
         viewModelScope.launch {
             try {
                 convertDataLiveData.postValue(repository.convert(from, to, amount))

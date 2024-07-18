@@ -1,13 +1,14 @@
 package psb.test.currencyconverter.model
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ConvertResponse(
-    @SerialName("success") val success: Boolean,
-    @SerialName("info") val info: Info,
-    @SerialName("date") val date: String,
-    @SerialName("timestamp") val timestamp: Long,
-    @SerialName("result") val result: Double,
+    @SerializedName("success") val success: Boolean,
+    @SerializedName("query") val query: Query,
+    @SerializedName("info") val info: Info,
+    @SerializedName("date") val date: String,
+    @SerializedName("timestamp") val timestamp: Long,
+    @SerializedName("result") val result: Double,
 )

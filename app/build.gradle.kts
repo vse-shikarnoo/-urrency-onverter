@@ -52,59 +52,52 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    val nav_version = "2.7.5"
 
     // Kotlin
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
 
 // architecture components
-    val coreVersion = "1.7.0"
-    val lifecycleVersion = "2.4.0"
-    val pagingVersion = "3.1.0"
-    implementation ("androidx.core:core-ktx:$coreVersion")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion")
-    implementation ("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation (libs.androidx.core.ktx.v170)
+    implementation (libs.androidx.lifecycle.runtime.ktx)
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation (libs.androidx.paging.runtime.ktx)
 
-    val retrofitVersion = "2.9.0"
-    val okhttpLoggingInterceptorVersion = "4.9.0"
-    val moshiVersion = "1.12.0"
     // retrofit
-    implementation ("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation ("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
-    implementation ("com.squareup.moshi:moshi:$moshiVersion")
-    implementation ("com.squareup.moshi:moshi-kotlin:$moshiVersion")
-    implementation ("com.squareup.retrofit2:retrofit-mock:$retrofitVersion")
-    implementation ("com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion")
-    implementation ("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation (libs.retrofit)
+    implementation (libs.converter.moshi)
+    implementation (libs.moshi)
+    implementation (libs.moshi.kotlin)
+    implementation (libs.retrofit.mock)
+    implementation (libs.logging.interceptor)
+    implementation (libs.converter.gson)
 
-    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation (libs.play.services.location)
 
-    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
-    implementation ("com.google.code.gson:gson:2.9.0")
-    implementation("org.json:json:20220320")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation (libs.jackson.module.kotlin)
+    implementation (libs.gson)
+    implementation(libs.json)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(kotlin("test"))
 
     //RoomDao
-    val room_version = "2.6.0"
 
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
 
     // To use Kotlin annotation processing tool (kapt)
-    ksp("androidx.room:room-compiler:$room_version")
+    ksp(libs.room.compiler)
     // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
+    ksp(libs.androidx.room.room.compiler)
 
     //View binding delegate
-    implementation ("com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6")
+    implementation (libs.viewbindingpropertydelegate.noreflection)
 
     //Glide
-    implementation ("com.github.bumptech.glide:glide:4.14.2")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
 }

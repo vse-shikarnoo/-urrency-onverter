@@ -10,7 +10,7 @@ import psb.test.currencyconverter.model.ConvertResponse
 import psb.test.currencyconverter.model.Currency
 import psb.test.currencyconverter.repository.MainRepository
 
-class MainViewModel() : ViewModel() {
+class MainViewModel : ViewModel() {
     private val repository = MainRepository()
 
 
@@ -33,16 +33,18 @@ class MainViewModel() : ViewModel() {
                 currencyListLiveData.postValue(repository.getCurrencies())
             }catch (t:Throwable){
                 Log.e("ERROR", "getCurrencies: ", t)
+                errorLiveData.postValue(Unit)
             }
         }
     }
 
-    fun convert(from: String, to: String, amount: Double, changeFlag: Boolean) {
+    fun convert(from: String, to: String, amount: Double) {
         viewModelScope.launch {
             try {
                 convertDataLiveData.postValue(repository.convert(from, to, amount))
             }catch (t:Throwable){
                 Log.e("ERROR", "convert: ", t)
+                errorLiveData.postValue(Unit)
             }
         }
     }

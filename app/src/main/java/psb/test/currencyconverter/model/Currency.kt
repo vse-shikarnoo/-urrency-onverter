@@ -1,6 +1,5 @@
 package psb.test.currencyconverter.model
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 

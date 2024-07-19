@@ -1,6 +1,5 @@
 package psb.test.currencyconverter.repository
 
-import android.util.Log
 import psb.test.currencyconverter.model.ConvertResponse
 import psb.test.currencyconverter.model.Currency
 import psb.test.currencyconverter.remote.ConvertService

@@ -5,11 +5,7 @@ import android.graphics.Path
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -19,7 +15,7 @@ import psb.test.currencyconverter.model.ConvertResponse
 import psb.test.currencyconverter.model.Currency
 import psb.test.currencyconverter.ui.adapter.SpinnerAdapter
 import psb.test.currencyconverter.vm.MainViewModel
-import vk.test.passwordmanager.utils.makeOnItemSelectedListener
+import psb.test.currencyconverter.utils.makeOnItemSelectedListener
 import kotlin.math.max
 import kotlin.math.min
 
@@ -36,7 +32,7 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         observe()
 
         viewModel.getCurrencies()
-        binding.fromEt.setText("0.0")
+        binding.fromEt.setText(amount.toString())
     }
 
     private fun setSpinners(currencyList: List<Currency>) {
@@ -48,19 +44,18 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         with(binding) {
 
             changeIv.setOnClickListener {
-                changeFlag = !changeFlag
                 animateChange()
                 changeDestinations()
                 convert()
             }
 
             fromSpinner.onItemSelectedListener = makeOnItemSelectedListener {
-                fromDestination = it.code
+                setFrom(it.code)
                 convert()
             }
 
             toSpinner.onItemSelectedListener = makeOnItemSelectedListener {
-                toDestination = it.code
+                setTo(it.code)
                 convert()
             }
 
@@ -87,7 +82,7 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
             loadingLayout.retryBtn.setOnClickListener {
                 loadingLayout.progressBar.visibility = View.VISIBLE
                 bindError(false)
-                viewModel.getCurrencies()
+                convert()
             }
         }
     }
@@ -98,11 +93,8 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         val leftY = min(binding.fromSpinner.y, binding.toSpinner.y)
         val rightX = max(binding.toSpinner.x, binding.fromSpinner.x)
         val rightY = max(binding.toSpinner.y, binding.fromSpinner.y)
-        val anglesFrom = if (!changeFlag) Pair(90f, -180f) else Pair(-90f, 180f)
-        val anglesTo = if (!changeFlag) Pair(-90f, 180f) else Pair(90f, -180f)
-
-        Log.i("TAG", "animateChangeLeft: $leftX; $leftY; $anglesFrom")
-        Log.i("TAG", "animateChangeRight: $rightX; $rightY; $anglesTo")
+        val anglesFrom = if (!changeFlag) Pair(-90f, -180f) else Pair(90f, 180f)
+        val anglesTo = if (!changeFlag) Pair(90f, 180f) else Pair(-90f, -180f)
 
         val pathFrom = Path().apply {
             arcTo(
@@ -148,10 +140,10 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
             binding.loadingLayout.progressBar.visibility = View.GONE
         }
         viewModel.error.observe(viewLifecycleOwner) {
+            binding.loadingLayout.progressBar.visibility = View.GONE
             bindError(true)
         }
         viewModel.convertData.observe(viewLifecycleOwner) {
-            Log.d("Test", "observeConvert: $it")
             bindError(false)
             binding.loadingLayout.progressBar.visibility = View.GONE
             setData(it)
@@ -171,7 +163,7 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
     }
 
     private fun convert() {
-        viewModel.convert(fromDestination, toDestination, amount, changeFlag)
+        viewModel.convert(fromDestination, toDestination, amount)
     }
 
     private fun setData(convertResponse: ConvertResponse) {
@@ -192,7 +184,23 @@ class MainFragment : Fragment(R.layout.fragment_main_layout) {
         private var amount: Double = 0.0
         private var changeFlag: Boolean = false
 
+        private fun setFrom(from:String){
+            if (!changeFlag){
+                fromDestination = from
+            }else{
+                toDestination = from
+            }
+        }
+
+        private fun setTo(to:String){
+            if (!changeFlag){
+                toDestination = to
+            }else{
+                fromDestination = to
+            }
+        }
         private fun changeDestinations() {
+            changeFlag = !changeFlag
             val t = fromDestination
             fromDestination = toDestination
             toDestination = t

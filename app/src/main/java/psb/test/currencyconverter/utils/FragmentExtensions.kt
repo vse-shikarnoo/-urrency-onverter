@@ -1,4 +1,4 @@
-package vk.test.passwordmanager.utils
+package psb.test.currencyconverter.utils
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import psb.test.currencyconverter.model.Currency
 
-fun Fragment.toast(@StringRes stringRes: String) {
+fun Fragment.toast(stringRes: String) {
     Toast.makeText(requireContext(), stringRes, Toast.LENGTH_SHORT).show()
 }
 
